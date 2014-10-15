@@ -1,16 +1,19 @@
 module Minesweeper
   class Board
-    attr_reader :board
-    def initialize
-      @board = Array.new(9) { Array.new(9) { Tile.new(self) } }
+    attr_reader :board, :size, :bomb_count
+    attr_accessor :flag_count
 
+    def initialize(size)
+      @size = size
+      @board = Array.new(@size) { Array.new(@size) { Tile.new(self) } }
       @board.each_with_index do |array, row|
         array.each_with_index do |tile, column|
           tile.position = [row, column]
         end
       end
-
-      seeding_bombs(9)
+      @bomb_count = ((size*size)/64)*10
+      @flag_count = 0
+      seeding_bombs(@bomb_count)
     end
 
     def seeding_bombs(num)

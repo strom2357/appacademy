@@ -31,7 +31,13 @@ module Minesweeper
     end
 
     def flag
-     @flagged = (@flagged ? false : true)
+      if @flagged == false
+        @flagged = true
+        @board.flag_count += 1
+      else
+        @flagged = false
+        @board.flag_count -= 1
+      end
     end
 
     def revealed?
@@ -59,7 +65,7 @@ module Minesweeper
       end
 
       all_neighbors.select! do |pos|
-        pos[0].between?(0, 8) && pos[1].between?(0, 8)
+        pos[0].between?(0, (@board.size-1)) && pos[1].between?(0, (@board.size-1))
       end
 
       all_neighbors.map! {|pos| @board[pos] }
@@ -78,15 +84,15 @@ module Minesweeper
 
     def inspect
       if flagged?
-        "F"
+        "\u2691"
       elsif revealed?
         if value == 0
-          "_"
+          " "
         else
           value
         end
       else
-        "*"
+        "\u25A0"
       end
     end
   end

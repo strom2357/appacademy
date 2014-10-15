@@ -6,28 +6,41 @@ module Minesweeper
   class GamePlay
 
     def initialize
-      @board = Board.new
       @scoreboard = Leaderboard.new
+      @cursor = [0, 0]
+    end
+
+    def make_board(size)
+      @board = Board.new(size)
     end
 
     def display_board
-      puts "  0 1 2 3 4 5 6 7 8"
       @board.board.each_with_index do |row, i| 
-        row_string = "#{i} "
-        row.each do |tile|
-          row_string += "#{tile.inspect} "
+        row_string = ""
+        row.each_with_index do |tile, j|
+          if @cursor ==[i, j]
+            row_string += "\u25A1 "
+          else
+            row_string += "#{tile.inspect} "
+          end
         end
         puts row_string
       end
-
-
     end
 
     def play
+    # save previous state of stty
+    # disable echoing and enable raw (not having to press enter)
+      # puts "Enter board size 1 - 42"
+      # size = gets.chomp.to_i
+      # make_board(size)
+
       start_time = Time.now
       until @board.over?
         system "clear"
         display_board
+        puts "#{@board.bomb_count} bombs"
+        puts "#{@board.flag_count} flagged"
         get_input
       end
 
@@ -59,24 +72,55 @@ module Minesweeper
     end
 
     def get_input
-      puts "Enter a coordinate: x,y"
-      pos = gets.chomp.upcase
-      return save if pos == "SAVE"
-      exit if pos == "QUIT"
-
-      pos = pos.split(",").map { |i| i.to_i }
-      pos.reverse!
-
-      puts "Reveal or flag? R/F"
-      move = gets.chomp.upcase
-      if move == "R"
-        @board[pos].reveal
-      elsif move == "F"
-        @board[pos].flag
-      else
-        puts "Invalid input!"
+      c = show_single_key
+      if c == "w"
+        @cursor[0] -= 1
+      elsif c == "s"
+        @cursor[0] += 1
+      elsif c == "a"
+        @cursor[1] -= 1
+      elsif c == "d"
+        @cursor[1] += 1
+      elsif c == "r"
+        @board[@cursor].reveal
+      elsif c == "f"
+        @board[@cursor].flag
+      elsif c == "q"
+        exit
+      elsif c == "."
+        save
       end
+
+      p @cursor
+      # return save if pos == "SAVE"
+      # exit if pos == "QUIT"
+
+      # pos = pos.split(",").map { |i| i.to_i }
+      # pos.reverse!
+
+      # puts "Reveal or flag? R/F"
+      # move = gets.chomp.upcase
+      # if move == "R"
+      #   @board[pos].reveal
+      # elsif move == "F"
+      #   @board[pos].flag
+      # else
+      #   puts "Invalid input!"
+      # end
     end
+
+    def read_char
+        old_state = `stty -g`
+        system "stty raw -echo"
+        c = STDIN.getc.chr
+        system "stty #{old_state}"
+        c
+    end
+
+    def show_single_key
+        c = read_char
+    end
+
 
   end
 end
@@ -90,6 +134,9 @@ if ans == "S"
   minesweeper = YAML::load(yaml_minesweeper)
 else
   minesweeper = Minesweeper::GamePlay.new
+  puts "Enter board size 1 - 42"
+  size = gets.chomp.to_i
+  minesweeper.make_board(size)
 end
 
 minesweeper.play
