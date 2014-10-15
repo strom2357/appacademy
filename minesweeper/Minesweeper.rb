@@ -15,7 +15,7 @@ module Minesweeper
       @board.board.each_with_index do |row, i| 
         row_string = "#{i} "
         row.each do |tile|
-          row_string << tile.inspect << " "
+          row_string += "#{tile.inspect} "
         end
         puts row_string
       end
