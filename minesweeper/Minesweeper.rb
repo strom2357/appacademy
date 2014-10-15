@@ -11,12 +11,22 @@ module Minesweeper
     end
 
     def display_board
-      p @board
+      puts "  0 1 2 3 4 5 6 7 8"
+      @board.board.each_with_index do |row, i| 
+        row_string = "#{i} "
+        row.each do |tile|
+          row_string << tile.inspect << " "
+        end
+        puts row_string
+      end
+
+
     end
 
     def play
       start_time = Time.now
       until @board.over?
+        system "clear"
         display_board
         get_input
       end
@@ -55,6 +65,7 @@ module Minesweeper
       exit if pos == "QUIT"
 
       pos = pos.split(",").map { |i| i.to_i }
+      pos.reverse!
 
       puts "Reveal or flag? R/F"
       move = gets.chomp.upcase
