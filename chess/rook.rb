@@ -7,6 +7,6 @@ class Rook < SlidingPiece
   ]
   
   def inspect
-    "R"
+    @color == "black" ? "\u265C".colorize(:light_black) : "\u265C".colorize(:light_blue)
   end
 end

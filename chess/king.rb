@@ -1,4 +1,3 @@
-require './stepping_pieces.rb'
 
 class King < SteppingPiece
   DIFFS = [
@@ -13,6 +12,6 @@ class King < SteppingPiece
    ]
 
    def inspect
-     "K"
+     @color == "black" ? "\u265A".colorize(:light_black) : "\u265A".colorize(:light_blue)
    end
 end

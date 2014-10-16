@@ -11,9 +11,6 @@ class Knight < SteppingPiece
   ]
   
   def inspect
-    "N"
+    @color == "black" ? "\u265E".colorize(:light_black) : "\u265E".colorize(:light_blue)
   end
 end
-
-# knight = Knight.new(nil, [1, 2])
-# p knight.moves

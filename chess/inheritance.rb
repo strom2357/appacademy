@@ -18,16 +18,6 @@ class Manager < Employee
     super
     @all_employees = []
   end
-
-  # def bonus(multiplier)
-  #   team_salary * multiplier
-  # end
-
-  # def team_salary
-  #   @all_employees.inject(0) do |team_salary, employee|
-  #     team_salary + employee.salary
-  #   end
-  # end
   
   def salary
     @salary + @all_employees.map(&:salary)

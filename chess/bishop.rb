@@ -7,6 +7,6 @@ class Bishop < SlidingPiece
   ]
   
   def inspect
-    "B"
+    @color == "black" ? "\u265D".colorize(:light_black) : "\u265D".colorize(:light_blue)
   end
 end

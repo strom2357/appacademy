@@ -1,22 +1,41 @@
 class Pawn < Piece
+  attr_accessor :moved
  
   def initialize(board, position, color)
     super
+    @moved = false
+  end
+  
+  def color_move(op, opponent_color)
+    x, y = @position
+    moves = []
+    
+    moves << [x.send(op, 1), y] if @board[[x.send(op, 1), y]].nil?
+    moves << [x.send(op, 2), y] if @moved == false 
+    
+    if !@board[[x.send(op, 1), y + 1]].nil? && 
+      @board[[x.send(op, 1), y + 1]].color == opponent_color
+      
+      moves << [x.send(op, 1), y + 1]
+    end
+    if !@board[[x.send(op, 1), y - 1]].nil? && 
+      @board[[x.send(op, 1), y - 1]].color == opponent_color
+      
+      moves << [x.send(op, 1), y - 1]
+    end
+    
+    moves
   end
 
   def moves
-    x, y = @position
-    [[x, y + 1]]
+    op = (@color == "white" ? "+" : "-")
+    opponent_color = (@color == "white" ? "black" : "white")
+    
+    moves = color_move(op, opponent_color)
   end
   
-  # def valid_moves
-  #   self.moves.keep_if do |move|
-  #     (@board[move].nil? || @board[move].color != self.color) && on_board(move)
-  #   end
-  # end
-  
   def inspect
-    "P"
+    @color == "black" ? "\u265F".light_black : "\u265F".light_blue
   end
 end
 

@@ -11,6 +11,6 @@ class Queen < SlidingPiece
   ]
   
   def inspect
-    "Q"
+    @color == "black" ? "\u265B".colorize(:light_black) : "\u265B".colorize(:light_blue)
   end
 end
